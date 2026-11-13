@@ -1,0 +1,13 @@
+{# Macros : petites fonctions de rendu réutilisables. Import : {% import '_partials/macros.html.twig' as ui %} #}
+
+{% macro badge_statut(statut) %}
+    <p class="fr-badge fr-badge--sm {{ statut.badge }}">{{ statut.libelle }}</p>
+{% endmacro %}
+
+{% macro bouton_post(url, libelle, token_id, classes = '', confirmation = null) %}
+    <form method="post" action="{{ url }}" class="fr-display-inline-block"
+          {% if confirmation %}data-controller="confirmation" data-confirmation-message-value="{{ confirmation }}" data-action="submit->confirmation#demander"{% endif %}>
+        <input type="hidden" name="_token" value="{{ csrf_token(token_id) }}">
+        <button class="fr-btn fr-btn--sm {{ classes }}">{{ libelle }}</button>
+    </form>
+{% endmacro %}

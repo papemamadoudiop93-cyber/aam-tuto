@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue{% endblock %}
+
+{% block body %}
+    <h1>Catalogue des formations</h1>
+
+    {# Contrôleur Stimulus "filtre" : assets/controllers/filtre_controller.js #}
+    <div data-controller="filtre">
+        <div class="fr-search-bar fr-mb-4w" role="search">
+            <label class="fr-label" for="recherche">Rechercher</label>
+            <input class="fr-input" id="recherche" type="search" placeholder="Filtrer par titre ou lieu"
+                   data-filtre-target="champ" data-action="input->filtre#filtrer">
+        </div>
+        <p class="fr-text--sm" data-filtre-target="compteur" aria-live="polite"></p>
+
+        <div class="fr-grid-row fr-grid-row--gutters">
+            {% for formation in formations %}
+                {% set restantes = formation.placesRestantes %}
+                <div class="fr-col-12 fr-col-md-6 fr-col-lg-4" data-filtre-target="element"
+                     data-texte="{{ (formation.titre ~ ' ' ~ formation.lieu)|lower }}">
+                    <div class="fr-card fr-enlarge-link">
+                        <div class="fr-card__body">
+                            <div class="fr-card__content">
+                                <h2 class="fr-card__title">
+                                    <a href="{{ path('formation_show', {id: formation.id}) }}">{{ formation.titre }}</a>
+                                </h2>
+                                <p class="fr-card__desc">{{ formation.description }}</p>
+                                <div class="fr-card__start">
+                                    <ul class="fr-badges-group">
+                                        {% if restantes == 0 %}
+                                            <li><p class="fr-badge fr-badge--error fr-badge--sm">Complet</p></li>
+                                        {% elseif restantes <= seuil_alerte %}
+                                            <li><p class="fr-badge fr-badge--warning fr-badge--sm">{{ restantes }} place{{ restantes > 1 ? 's' }}</p></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                <div class="fr-card__end">
+                                    <p class="fr-card__detail fr-icon-calendar-line">{{ formation.dateDebut|date('d/m/Y') }} · {{ formation.lieu }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p>Aucune formation à venir. Chargez les données : <code>php bin/console doctrine:fixtures:load</code></p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+# PostgreSQL local, pour s'entraîner dans les conditions de l'Académie.
+services:
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: formations
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    ports:
+      - "5432:5432"
+    volumes:
+      - database_data:/var/lib/postgresql/data
+
+volumes:
+  database_data:

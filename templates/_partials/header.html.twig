@@ -1,0 +1,58 @@
+<header role="banner" class="fr-header">
+    <div class="fr-header__body">
+        <div class="fr-container">
+            <div class="fr-header__body-row">
+                <div class="fr-header__brand fr-enlarge-link">
+                    <div class="fr-header__brand-top">
+                        {# Pas de bloc-marque "Marianne" : il est réservé aux services de l'État. #}
+                        <div class="fr-header__navbar">
+                            <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="menu-principal" aria-haspopup="menu" id="bouton-menu" title="Menu">Menu</button>
+                        </div>
+                    </div>
+                    <div class="fr-header__service">
+                        <a href="{{ path('formation_index') }}" title="Accueil – Formations">
+                            <p class="fr-header__service-title">Formations des agents</p>
+                        </a>
+                        <p class="fr-header__service-tagline">Projet d'entraînement Symfony + DSFR</p>
+                    </div>
+                </div>
+                <div class="fr-header__tools">
+                    <div class="fr-header__tools-links">
+                        <ul class="fr-btns-group">
+                            {% if app.user %}
+                                <li><span class="fr-btn fr-icon-account-circle-line">{{ app.user.nomComplet }}</span></li>
+                                <li><a class="fr-btn fr-icon-logout-box-r-line" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                            {% else %}
+                                <li><a class="fr-btn fr-icon-lock-line" href="{{ path('app_login') }}">Se connecter</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% set route = app.current_route %}
+    <div class="fr-header__menu fr-modal" id="menu-principal" aria-labelledby="bouton-menu">
+        <div class="fr-container">
+            <button class="fr-btn--close fr-btn" aria-controls="menu-principal" title="Fermer">Fermer</button>
+            <div class="fr-header__menu-links"></div>
+            <nav class="fr-nav" role="navigation" aria-label="Menu principal">
+                <ul class="fr-nav__list">
+                    <li class="fr-nav__item">
+                        <a class="fr-nav__link" href="{{ path('formation_index') }}" {{ route starts with 'formation_' ? 'aria-current="page"' }}>Catalogue</a>
+                    </li>
+                    {% if is_granted('ROLE_AGENT') %}
+                        <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="{{ path('inscription_mes') }}" {{ route starts with 'inscription_' ? 'aria-current="page"' }}>Mes inscriptions</a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_GESTIONNAIRE') %}
+                        <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="{{ path('gestion_index') }}" {{ route starts with 'gestion_' ? 'aria-current="page"' }}>Gestion</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>

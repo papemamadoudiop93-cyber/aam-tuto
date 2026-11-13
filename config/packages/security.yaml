@@ -1,0 +1,45 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    # D'où viennent les utilisateurs : ici la table "agent" via Doctrine.
+    # À l'Académie, ce sera un provider branché sur l'authentification fédérée (OIDC / SAML).
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\Agent
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js|assets|dsfr)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+            # Authenticator "formulaire de connexion". Exercice : le remplacer par un authenticator OIDC.
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+                default_target_path: formation_index
+            logout:
+                path: app_logout
+                target: formation_index
+
+    role_hierarchy:
+        ROLE_GESTIONNAIRE: ROLE_AGENT
+
+    # Contrôle d'accès grossier par URL ; le contrôle fin se fait dans les voters.
+    access_control:
+        - { path: ^/gestion, roles: ROLE_GESTIONNAIRE }
+        - { path: ^/mes-inscriptions, roles: ROLE_AGENT }
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10

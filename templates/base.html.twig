@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr" data-fr-scheme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Formations{% endblock %} – Académie fictive</title>
+    {# DSFR servi depuis public/dsfr (copie du paquet @gouvfr/dsfr 1.12.1) #}
+    <link rel="stylesheet" href="{{ asset('dsfr/dsfr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('dsfr/utility/icons/icons.min.css') }}">
+    <link rel="icon" href="{{ asset('dsfr/favicon/favicon.svg') }}" type="image/svg+xml">
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
+</head>
+<body>
+    {% include '_partials/header.html.twig' %}
+
+    <main id="contenu" class="fr-container fr-my-6w">
+        {% include '_partials/flashes.html.twig' %}
+        {% block body %}{% endblock %}
+    </main>
+
+    {% include '_partials/footer.html.twig' %}
+
+    <script type="module" src="{{ asset('dsfr/dsfr.module.min.js') }}"></script>
+</body>
+</html>

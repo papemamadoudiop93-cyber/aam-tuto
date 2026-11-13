@@ -1,0 +1,16 @@
+# Conteneur de services : tout ce qui est dans src/ devient un service,
+# avec injection automatique des dépendances (autowiring) par type.
+parameters:
+    app.places_alerte: 3   # seuil "places restantes" affiché dans la liste
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true   # listeners, voters, commandes... enregistrés automatiquement
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'

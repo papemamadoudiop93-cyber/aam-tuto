@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% import '_partials/macros.html.twig' as ui %}
+
+{% block title %}Mes inscriptions{% endblock %}
+
+{% block body %}
+    <h1>Mes inscriptions</h1>
+
+    <div class="fr-table">
+        <table>
+            <caption>Vos demandes d'inscription</caption>
+            <thead>
+                <tr><th>Formation</th><th>Date</th><th>Statut</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+                {% for inscription in inscriptions %}
+                    <tr>
+                        <td><a href="{{ path('formation_show', {id: inscription.formation.id}) }}">{{ inscription.formation.titre }}</a></td>
+                        <td>{{ inscription.formation.dateDebut|date('d/m/Y') }}</td>
+                        <td>{{ ui.badge_statut(inscription.statut) }}</td>
+                        <td>
+                            {% if is_granted('INSCRIPTION_ANNULER', inscription) %}
+                                {{ ui.bouton_post(path('inscription_annuler', {id: inscription.id}), 'Annuler', 'annuler' ~ inscription.id, 'fr-btn--secondary', 'Annuler cette demande ?') }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="4">Aucune demande pour le moment.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

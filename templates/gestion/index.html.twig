@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% import '_partials/macros.html.twig' as ui %}
+
+{% block title %}Gestion des demandes{% endblock %}
+
+{% block body %}
+    <h1>Demandes en attente</h1>
+
+    <div class="fr-table">
+        <table>
+            <caption>Demandes à traiter, de la plus ancienne à la plus récente</caption>
+            <thead>
+                <tr><th>Agent</th><th>Formation</th><th>Places restantes</th><th>Motivation</th><th>Décision</th></tr>
+            </thead>
+            <tbody>
+                {% for inscription in inscriptions %}
+                    <tr>
+                        <td>{{ inscription.agent.nomComplet }}</td>
+                        <td>{{ inscription.formation.titre }}</td>
+                        <td>{{ inscription.formation.placesRestantes }}</td>
+                        <td>{{ inscription.motivation|length > 80 ? inscription.motivation|slice(0, 80) ~ '…' : inscription.motivation }}</td>
+                        <td>
+                            <div class="fr-btns-group fr-btns-group--inline fr-btns-group--sm">
+                                {{ ui.bouton_post(path('gestion_decider', {id: inscription.id, decision: 'valider'}), 'Valider', 'decider' ~ inscription.id) }}
+                                {{ ui.bouton_post(path('gestion_decider', {id: inscription.id, decision: 'refuser'}), 'Refuser', 'decider' ~ inscription.id, 'fr-btn--secondary', 'Refuser cette demande ?') }}
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5">Aucune demande en attente.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

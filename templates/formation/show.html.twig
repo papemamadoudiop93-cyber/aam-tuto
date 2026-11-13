@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ formation.titre }}{% endblock %}
+
+{% block body %}
+    <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+        <ol class="fr-breadcrumb__list">
+            <li><a class="fr-breadcrumb__link" href="{{ path('formation_index') }}">Catalogue</a></li>
+            <li><a class="fr-breadcrumb__link" aria-current="page">{{ formation.titre }}</a></li>
+        </ol>
+    </nav>
+
+    <h1>{{ formation.titre }}</h1>
+    <p class="fr-text--lead">{{ formation.description }}</p>
+    <ul>
+        <li>Date : {{ formation.dateDebut|date('d/m/Y à H\\hi') }}</li>
+        <li>Lieu : {{ formation.lieu }}</li>
+        <li>Places restantes : {{ formation.placesRestantes }} / {{ formation.places }}</li>
+    </ul>
+
+    <h2 class="fr-mt-6w">Demander une inscription</h2>
+    {% if app.user %}
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+            {% set champ = form.motivation %}
+            <div class="fr-input-group {{ champ.vars.errors|length ? 'fr-input-group--error' }}"
+                 data-controller="compteur" data-compteur-max-value="500">
+                {{ form_label(champ, null, {label_attr: {class: 'fr-label'}}) }}
+                <span class="fr-hint-text">{{ champ.vars.help }}</span>
+                {{ form_widget(champ, {attr: {class: 'fr-input', rows: 5, 'data-compteur-target': 'champ', 'data-action': 'input->compteur#maj'}}) }}
+                <p class="fr-hint-text" data-compteur-target="affichage" aria-live="polite"></p>
+                {% for erreur in champ.vars.errors %}
+                    <p class="fr-error-text">{{ erreur.message }}</p>
+                {% endfor %}
+            </div>
+            <button class="fr-btn">Envoyer ma demande</button>
+        {{ form_end(form) }}
+    {% else %}
+        <div class="fr-callout">
+            <p class="fr-callout__text">Connectez-vous pour demander une inscription.</p>
+            <a class="fr-btn" href="{{ path('app_login') }}">Se connecter</a>
+        </div>
+    {% endif %}
+{% endblock %}
