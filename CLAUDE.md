@@ -20,6 +20,7 @@ Données et organisation **fictives** : ne jamais y mettre de code, de données 
 - Toute modification de schéma passe par une migration : `php bin/console make:migration`, puis relire le fichier avant `doctrine:migrations:migrate`.
 - Formulaires en POST protégés par jeton CSRF.
 - Ne pas lire ni afficher `.env.local`.
+- Commits et PR : aucune mention de Claude (pas de Co-Authored-By, Claude-Session ni « Generated with Claude Code »), auteur papemamadoudiop93-cyber (cf. `.claude/settings.json`).
 - Avant de dire qu'un changement est fini :
   - `php vendor/bin/phpunit`
   - `php bin/console lint:twig templates`
